@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,19 +14,24 @@ import javax.swing.border.LineBorder;
 
 public class Display implements Updatable {
 
+  private static Sudoku.Controller controller;
+
   Display(Sudoku.Controller controller) {
+
+    Display.controller = new Sudoku.Controller();
 
     JFrame frame = new JFrame("Sudoku");
     frame.setSize(900, 600);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setLayout(new BorderLayout());
+
     frame.add(new SudokuBoard());
     frame.add(new MenuPane(), BorderLayout.AFTER_LINE_ENDS);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
   }
 
 
-  public static class MenuPane extends JPanel {
+  public class MenuPane extends JPanel {
 
     public MenuPane() {
       setBorder(new EmptyBorder(4, 4, 4, 4));
@@ -35,32 +42,38 @@ public class Display implements Updatable {
       gbc.weightx = 1;
       gbc.fill = GridBagConstraints.HORIZONTAL;
 
-      add(new JButton("Start"), gbc);
+      JButton startButton = new JButton("Start");
+      startButton.addActionListener(e -> controller.initiate());
+      add(startButton, gbc);
       gbc.gridy++;
-      add(new JButton("Solve"), gbc);
+      JButton solveButton = new JButton("Solve");
+      solveButton.addActionListener(e -> controller.solve());
+      add(solveButton, gbc);
       gbc.gridy++;
-      add(new JButton("Reset"), gbc);
-
+      JButton resetButton = new JButton("Reset");
+      resetButton.addActionListener(e -> controller.reset());
+      add(resetButton, gbc);
     }
 
   }
 
   // Set up the board with 3x3 sectors (3x3 each)
-  public static class SudokuBoard extends JPanel{
+  public class SudokuBoard extends JPanel {
+
     public final int rows = 3;
     public final int cols = 3;
 
     private Sector[][] sectors;
 
     public SudokuBoard() {
-      setBorder(new EmptyBorder(3,3,2,2));
+      setBorder(new EmptyBorder(3, 3, 2, 2));
       sectors = new Sector[rows][cols];
       setLayout(new GridLayout(rows, cols, 2, 2));
       for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-          //int index = (i * rows) + j;
-          Sector sector = new Sector(rows, cols);
-          sector.setBorder(new CompoundBorder(new LineBorder(Color.GRAY, 1), new EmptyBorder(4, 4, 4, 4)));
+          Sector sector = new Sector(rows, cols, (3 * i + j));
+          sector.setBorder(
+              new CompoundBorder(new LineBorder(Color.GRAY, 1), new EmptyBorder(4, 4, 4, 4)));
           sectors[i][j] = sector;
           add(sector);
         }
@@ -69,16 +82,40 @@ public class Display implements Updatable {
 
   }
 
-  public static class Sector extends JPanel {
+  public class Sector extends JPanel {
+
     private JButton[][] cells;
 
-    public Sector(int rows, int cols) {
+    public Sector(int rows, int cols, int sectorNum) {
       setBorder(new LineBorder(Color.LIGHT_GRAY));
       setLayout(new GridLayout(rows, cols, 2, 2));
       cells = new JButton[rows][cols];
       for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
           JButton cell = new JButton();
+          int boardI = (sectorNum / 3) * 3 + i ;
+          int boardJ = (sectorNum % 3) * 3 + j;
+          cell.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+              // auto generated method
+            }
+
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+              int num = keyEvent.getKeyChar() - 48;
+              if (num >= 1 && num <= 9) {
+                controller.updateCell(boardI, boardJ, num);
+                cell.setText(String.valueOf(keyEvent.getKeyChar()));
+              }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+              // auto generated method
+            }
+          });
+
           cells[i][j] = cell;
           add(cell);
         }
@@ -87,7 +124,9 @@ public class Display implements Updatable {
   }
 
   @Override
-  public void updateButton(JButton button, String num) {
-    button.setText(num);
+  public void updateBoard() {
+
   }
+
+
 }

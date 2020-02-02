@@ -3,13 +3,20 @@ import java.util.List;
 
 public class Sudoku {
 
-  private Display sudokuDisplay = new Display(new Controller());
-  private Model sudokuModel = new Model(sudokuDisplay);
+  private static Display sudokuDisplay = new Display(new Controller());
+  private static Model sudokuModel = new Model(sudokuDisplay);
 
-  class Controller {
+  static class Controller {
 
-    void updateGrid(int gridX, int gridY, char input) {
-      int num = input - 48;
+    void initiate() {
+      sudokuModel.initiateGrid();
+    }
+
+    void reset() {
+      sudokuModel.resetGrid();
+    }
+
+    void updateCell(int gridX, int gridY, int num) {
       sudokuModel.updateCell(gridX, gridY, num);
     }
 
@@ -58,7 +65,7 @@ public class Sudoku {
       return sudokuModel.getGrid();
     }
 
-    private boolean solve() {
+    public boolean solve() {
       int[][] grid = sudokuModel.getGrid();
       List<Integer> emptyCell = findEmpty();
       if(emptyCell.isEmpty()){
