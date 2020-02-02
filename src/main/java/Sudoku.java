@@ -54,14 +54,18 @@ public class Sudoku {
       return emptyCell;
     }
 
+    public int[][] getGrid(){
+      return sudokuModel.getGrid();
+    }
+
     private boolean solve() {
       int[][] grid = sudokuModel.getGrid();
-      List<Integer> empty = findEmpty();
-      if(empty.isEmpty()){
+      List<Integer> emptyCell = findEmpty();
+      if(emptyCell.isEmpty()){
         return true;
       } else {
-        int row = empty.get(0);
-        int col = empty.get(1);
+        int row = emptyCell.get(0);
+        int col = emptyCell.get(1);
         for (int i = 1; i < 10; i++) {
           if(isValid(i, row, col)) {
             sudokuModel.updateCell(row, col, i);
