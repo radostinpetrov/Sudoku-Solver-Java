@@ -2,6 +2,6 @@ import javax.swing.JButton;
 
 public interface Updatable {
 
-  void updateBoard();
+  void updateButton(int row, int col, String num);
 
 }

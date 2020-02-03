@@ -18,7 +18,10 @@ public class Sudoku {
 
     void updateCell(int gridX, int gridY, int num) {
       sudokuModel.updateCell(gridX, gridY, num);
+      sudokuDisplay.updateButton(gridX, gridY, Integer.toString(num));
     }
+
+
 
     boolean isValid(int num, int x, int y) {
       int[][] grid = sudokuModel.getGrid();
