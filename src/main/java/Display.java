@@ -2,8 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JButton;
@@ -13,17 +11,20 @@ import javax.swing.border.EmptyBorder;
 
 public class Display implements Updatable {
 
+  private Sudoku.Controller controller;
   private JButton[][] cells;
+  private final int ROWS = 9;
+  private final int COLUMNS = 9;
 
   Display(Sudoku.Controller controller) {
 
+    this.controller = controller;
     JFrame frame = new JFrame("Sudoku");
     frame.setSize(900, 600);
     frame.setLayout(new BorderLayout());
 
     JPanel sudokuPane = new JPanel();
-    final int ROWS = 9;
-    final int COLUMNS = 9;
+
     cells = new JButton[ROWS][COLUMNS];
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS; j++) {
@@ -31,6 +32,7 @@ public class Display implements Updatable {
         int finalI = i;
         int finalJ = j;
         cell.addKeyListener(new KeyListener() {
+
           @Override
           public void keyTyped(KeyEvent keyEvent) {
             // auto generated method
@@ -41,7 +43,7 @@ public class Display implements Updatable {
             int num = keyEvent.getKeyChar() - 48;
             if (num >= 1 && num <= 9) {
               controller.updateCell(finalI, finalJ, num);
-              updateButton(finalI, finalJ, Integer.toString(num));
+              updateBoard();
             }
           }
 
@@ -69,44 +71,20 @@ public class Display implements Updatable {
     gbc.fill = GridBagConstraints.HORIZONTAL;
 
     JButton startButton = new JButton("Start");
-    startButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        controller.initiate();
-        for (int i = 0; i < ROWS; i++) {
-          for (int j = 0; j < COLUMNS; j++) {
-            updateButton(i, j, String.valueOf(controller.getGrid()[i][j]));
-          }
-        }
-      }
+    startButton.addActionListener(actionEvent -> {
+      controller.initiate();
     });
     menuPane.add(startButton, gbc);
     gbc.gridy++;
     JButton solveButton = new JButton("Solve");
-    solveButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        controller.solve();
-        for (int i = 0; i < ROWS; i++) {
-          for (int j = 0; j < COLUMNS; j++) {
-            updateButton(i, j, String.valueOf(controller.getGrid()[i][j]));
-          }
-        }
-      }
+    solveButton.addActionListener(actionEvent -> {
+      controller.solve();
     });
     menuPane.add(solveButton, gbc);
     gbc.gridy++;
     JButton resetButton = new JButton("Reset");
-    resetButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        controller.reset();
-        for (int i = 0; i < ROWS; i++) {
-          for (int j = 0; j < COLUMNS; j++) {
-            updateButton(i, j, String.valueOf(controller.getGrid()[i][j]));
-          }
-        }
-      }
+    resetButton.addActionListener(actionEvent -> {
+      controller.reset();
     });
     menuPane.add(resetButton, gbc);
 
@@ -116,14 +94,16 @@ public class Display implements Updatable {
   }
 
 
-  @Override
-  public void updateButton(int row, int col, String num) {
-    if ((!num.equals("0"))) {
-      cells[row][col].setText(num);
-    } else {
-      cells[row][col].setText(null);
+  public void updateBoard() {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
+        if (controller.getCell(i,j) == 0) {
+          cells[i][j].setText(null);
+        } else {
+          cells[i][j].setText(String.valueOf(controller.getCell(i, j)));
+        }
+      }
     }
-
   }
 
 

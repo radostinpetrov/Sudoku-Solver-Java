@@ -32,4 +32,29 @@ public class Model {
     grid[gridX][gridY] = num;
   }
 
+  boolean isValid(int num, int x, int y) {
+    for (int j = 0; j < grid[0].length; j++) {
+      if (grid[x][j] == num && y != j) {
+        return false;
+      }
+    }
+    for (int i = 0; i < grid.length; i++) {
+      if (grid[i][y] == num && x != i) {
+        return false;
+      }
+    }
+
+    int sector_x = x / 3;
+    int sector_y = y / 3;
+
+    for (int i = sector_x * 3; i < sector_x * 3 + 3; i++) {
+      for (int j = sector_y * 3; j < sector_y * 3 + 3; j++) {
+        if ((x != i || y != j) && grid[i][j]==num) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
 }
