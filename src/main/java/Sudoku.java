@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Sudoku {
 
   private Display sudokuDisplay = new Display(new Controller());
@@ -26,14 +23,14 @@ public class Sudoku {
 
 
     public int getCell(int row, int col){
-      return sudokuModel.getGrid()[row][col];
+      return sudokuModel.getGrid()[row * Display.COLS + col];
     }
 
     public boolean solve() {
-      int[][] grid = sudokuModel.getGrid();
+      int[] grid = sudokuModel.getGrid();
       for (int i = 0; i < Display.ROWS; i++) {
-        for (int j = 0; j < Display.COLUMNS; j++) {
-          if(grid[i][j] == 0) {
+        for (int j = 0; j < Display.COLS; j++) {
+          if(grid[i * Display.COLS + j] == 0) {
             for (int num = 1; num < 10; num++) {
               sudokuModel.updateCell(i, j, num);
               if (sudokuModel.isValid(num, i, j) && solve()) {

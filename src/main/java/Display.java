@@ -14,7 +14,7 @@ public class Display implements Updatable {
   private Sudoku.Controller controller;
   private JButton[][] cells;
   static final int ROWS = 9;
-  static final int COLUMNS = 9;
+  static final int COLS = 9;
 
   Display(Sudoku.Controller controller) {
 
@@ -26,9 +26,9 @@ public class Display implements Updatable {
     // main board pane
     JPanel sudokuPane = new JPanel();
 
-    cells = new JButton[ROWS][COLUMNS];
+    cells = new JButton[ROWS][COLS];
     for (int i = 0; i < ROWS; i++) {
-      for (int j = 0; j < COLUMNS; j++) {
+      for (int j = 0; j < COLS; j++) {
         JButton cell = new JButton();
         int finalI = i;
         int finalJ = j;
@@ -99,7 +99,7 @@ public class Display implements Updatable {
 
   public void updateBoard() {
     for (int i = 0; i < ROWS; i++) {
-      for (int j = 0; j < COLUMNS; j++) {
+      for (int j = 0; j < COLS; j++) {
         if (controller.getCell(i,j) == 0) {
           cells[i][j].setText(null);
         } else {
