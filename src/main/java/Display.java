@@ -13,8 +13,8 @@ public class Display implements Updatable {
 
   private Sudoku.Controller controller;
   private JButton[][] cells;
-  private final int ROWS = 9;
-  private final int COLUMNS = 9;
+  static final int ROWS = 9;
+  static final int COLUMNS = 9;
 
   Display(Sudoku.Controller controller) {
 
@@ -23,6 +23,7 @@ public class Display implements Updatable {
     frame.setSize(900, 600);
     frame.setLayout(new BorderLayout());
 
+    // main board pane
     JPanel sudokuPane = new JPanel();
 
     cells = new JButton[ROWS][COLUMNS];
@@ -61,6 +62,8 @@ public class Display implements Updatable {
 
     frame.add(sudokuPane);
 
+
+    // setting up the menu buttons on the side
     JPanel menuPane = new JPanel();
     menuPane.setBorder(new EmptyBorder(4, 4, 4, 4));
     menuPane.setLayout(new GridBagLayout());

@@ -1,5 +1,8 @@
 public class Model {
 
+  private final int ROWS = 9;
+  private final int COLS = 9;
+
   Updatable display;
   int[][] grid;
 
@@ -21,7 +24,7 @@ public class Model {
   }
 
   void resetGrid() {
-    grid = new int[9][9];
+    grid = new int[ROWS][COLS];
   }
 
   int[][] getGrid() {
